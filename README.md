@@ -13,6 +13,8 @@ That Stuff is Interesting by Ionwyn Sean, a TeX based project to build open know
 - teTeX for Linux and other UNIX-like systems, now is no longer actively maintained
 - proTeXt is based on MiKTeX
 
+For running on ShareLaTeX, you may need to zip the file together before uploading.
+
 # How I hope it works (1x zoom)
 1. Each person can create their own branch (or fork) to build their own knowledge base.
 2. Each person can contribute to someone else's knowledge base by submitting pull request to the respective branch (or repo).
