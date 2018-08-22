@@ -1,0 +1,9 @@
+\section{Why is 0.1+0.2 not equal to 0.3 in most programming languages?}
+
+It has nothing to do with the languages usually, but on the underlying representation the languages use for representing numbers.  By default most but not all languages use the fastest representations.  On the x86 this is usually 32 or 64 bit binary integers.
+
+Some languages that are a bit more particular, like COBOL or PL/I or Delphi,  give you a choice,  binary or decimal or character math.  In COBOL you can declare a variable to be PIC 9999.9999  and it will do decimal math so that 0.1 plus 0.2 gives you exactly 0.3.    But that will take like ten times longer than doing a binary floating-point add.    You have a choice, exact math or fast math.
+
+Some really old CPU's like IBM mainframes had instructions for decimal and binary math, so there the speed difference isn't quite so large.
+
+To go into detail:  in a binary fraction, 0.1 is not re-presentable exactly, it's represented as 1/16 plus 1/32 plus 1/256 plus 1/512 plus 1/4096 plus 1/8192 plus 1/65536 and so on.  going out that far you get 0.09999084472, that's with sixteen binary fraction digits.  So you can get close to 0.1 but not exactly.      It's confusing, since most languages store the inexact value, but when you go to print the value out, the output routine rounds it to the nearest number, which may be 0.1.    Confusing.

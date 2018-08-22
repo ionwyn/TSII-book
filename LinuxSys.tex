@@ -1,0 +1,105 @@
+\begin{chapquote}{Unknown, \textit{on being SysAdmin}}
+``A great Admin doesn't need to know everything, but they should be able to come up with amazing solutions to impossible projects.''
+\end{chapquote}
+
+\section{First words}
+
+A system administrator, or sysadmin, is a person who is responsible for the upkeep, configuration, and reliable operation of computer systems; especially single-user computers, such as servers. The system administrator seeks to ensure that the uptime, performance, resources, and security of the computers they manage meet the needs of the users, without exceeding a set budget when doing so. 
+
+This chapter is focused on GNU/Linux and BSD.  SysAdmin is a broad topic, therefore the sections in this chapter cover other disciplines; DevOps, Networking, and Security.
+
+\section{Problem with using '-' as filename}
+Using - as a filename to mean stdin/stdout is a convention that a lot of programs use. It is not a special property of the filename. The kernel does not recognise - as special so any system calls referring to - as a filename will use - literally as the filename.  With bash redirection, - is not recognised as a special filename, so bash will use that as the literal filename.
+
+When cat sees the string - as a filename, it treats it as a synonym for stdin. To get around this, you need to alter the string that cat sees in such a way that it still refers to a file called -. The usual way of doing this is to prefix the filename with a path - ./-, or /home/Tim/-. This technique is also used to get around similar issues where command line options clash with filenames, so a file referred to as ./-e does not appear as the -e command line option to a program, for example.
+
+\section{The basic components of Linux}
+
+Linux OS consists of three components listed below:
+
+\begin{itemize}
+    \item \textbf{Kernel} : The monolithic kernel is responsible for managing hardware resources for the users
+    
+    \item \textbf{System Library} : Play a vital role because application programs access Kernel features using system library
+    
+    \item \textbf{System Utility} : Performs specific and inidivudal level tasks
+\end{itemize}
+
+\section{Sync two local directories on the same system}
+
+\noindent
+To sync the contents of dir1 to dir2 on the same system:\\
+\[\texttt{rsync -av --progress --delete dir1/ dir2}\]
+
+\begin{itemize}
+    \item \texttt{-a, --archive} archive mode
+    \item \texttt{--delete} delete extraneous files from destination dir
+    \item \texttt{-v, --verbose} verbose mode (increase verbosity)
+    \item \texttt{--progress} show progress during transfer
+\end{itemize}
+
+\section{Finding password file located in Linux systems}
+
+Linux passwords are stored in the /etc/shadow file. They are salted and the algorithm being used depends on the particular distribution and is configurable.  \textbf{shadow} is the file where important information (like an encrypted form of the password of a user, the day the password expires, whether or not the passwd has to be changed, the minimum and maximum time between password changes, ...) is stored when a new user is created.  The algorithms supported are MD5, Blowfish, SHA256 and SHA512.
+
+There is also /etc/passwd which stores general user info.  \textbf{passwd} is the file where the user information (like username, user ID, group ID, location of home directory, login shell, ...) is stored when a new user is created.
+
+\section{What are symbolic links?}
+
+A symbolic link, also termed a soft link, is a special kind of file that points to another file, much like a shortcut in Windows or a Macintosh alias. Unlike a hard link, a symbolic link does not contain the data in the target file. It simply points to another entry somewhere in the file system.
+
+\section{Should a root certificate go to server?}
+
+Self-signed root certificates need not/should not be included in web server configuration. They serve no purpose (clients will always ignore them) and they incur a slight performance (latency) penalty because they increase the size of the SSL handshake.
+
+If the client does not have the root in their trust store, then it won't trust the web site, and there is no way to work around that problem. Having the web server send the root certificate will not help - the root certificate has to come from a trusted 3rd party (in most cases the browser vendor).
+
+\section{What is Network Address Translation (NAT)?}
+
+It enables private IP networks that use unregistered IP addresses to connect to the Internet. NAT operates on a router, usually connecting two networks together, and translates the private (not globally unique) addresses in the internal network into legal addresses, before packets are forwarded to another network.
+
+Workstations or other computers requiring special access outside the network can be assigned specific external IPs using NAT, allowing them to communicate with computers and applications that require a unique public IP address. NAT is also a very important aspect of firewall security.
+
+\section{Checking which ports are listening in a linux server}
+
+\begin{itemize}
+    \item \texttt{lsof -i}
+    \item \texttt{ss -l}
+    \item \texttt{netstat -atn} for tcp
+    \item \texttt{netstat -aun} for udp
+    \item \texttt{netstat -tulapn} all
+\end{itemize}
+
+You can also list any process listening to a specific port (e.g. 8080) you can do \texttt{lsof -i:8080}.  To kill it, you can use \texttt{kill \$(lsof -t -i:8080)}.  Or, more violently, \texttt{kill -9 \$(lsof -t -i:8080)}
+
+\section{What is XSS and how to mitigate it}
+
+Cross Site Scripting is a JavaScript vulnerability in the web applications. The easiest way to explain this is a case when a user enters a script in the client side input fields and that input gets processed without getting validated. This leads to untrusted data getting saved and executed on the client side.
+
+Countermeasures of XSS are input validation, implementing a CSP (Content security policy) etc.
+
+\section{The Three Musketeer of Kernels}
+
+\begin{itemize}
+    \item \textbf{Microkernel}: This type of kernel only manages CPU, memory, and IPC. This kind of kernel provides portability, small memory footprint and also security.
+    
+    \item \textbf{Monolithic} Kernel: Linux is a monolithic kernel. So, this type of kernel provides file management, system server calls, also manages CPU, IPC as well as device drivers. It provides easier access to the process to communicate and as there is not any queue for processor time, so processes react faster.
+    
+    \item \textbf{Hybrid} Kernel: In this type of kernels, programmers can select what they want to run in user mode and what in supervisor mode. So, this kernel provides more flexibility than any other kernel but it can have some latency problems.
+\end{itemize}
+
+\section{What is CSRF}
+
+\textbf{Cross Site Request Forgery} is a web application vulnerability in which the server does not check whether the request came from a trusted client or not. The request is just processed directly. It can be further followed by the ways to detect this, examples and countermeasures.
+
+\section{Enforcing authorization methods in SSH}
+
+Force login with a password:
+
+\noindent
+\texttt{ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@remote\_host}
+
+Force login using the key:
+
+\noindent
+\texttt{ssh -o PreferredAuthentications=publickey -o PubkeyAuthentication=yes -i id\_rsa user@remote\_host}
